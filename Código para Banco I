@@ -1,0 +1,54 @@
+public class Conexion {
+    
+    public Connection getConnection() {
+        Connection con = null;
+        
+        // Datos de tu servidor según tu imagen 08b5bf.png
+        String databaseName = "CUENTA";
+        String server = "LAPTOP-TR7RCQL2\\SQLEXPRESS";
+        String url = "jdbc:sqlserver://localhost:1433;instanceName=SQLEXPRESS;databaseName=" + databaseName + ";encrypt=true;trustServerCertificate=true;integratedSecurity=true;";
+    try {
+        // Esta línea registra el driver de Microsoft para que Java lo reconozca
+        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        
+        con = DriverManager.getConnection(url);
+        
+        if (con != null) {
+            System.out.println("¡Conexión exitosa!");
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error de conexión: " + e.getMessage());
+    
+    }
+    return con;
+
+    }
+}
+
+ private void jbtnDepositarActionPerformed(java.awt.event.ActionEvent evt) {                                              
+        // TODO add your handling code here:
+        Connection con;
+        Conexion conn = new Conexion();
+
+try {
+    con = conn.getConnection();
+    PreparedStatement ps = con.prepareStatement("UPDATE CUENTA SET saldo = saldo + ? WHERE idcuenta = 1");
+    
+    
+    ps.setFloat(1, Float.parseFloat(jtfCantidad.getText()));
+
+    int res = ps.executeUpdate();
+
+    if (res > 0) {
+        JOptionPane.showMessageDialog(null, "Depósito exitoso");
+    } else {
+        JOptionPane.showMessageDialog(null, "Error al depositar");
+    }
+
+    jtfCantidad.setText("");
+    con.close();
+
+} catch (Exception e) {
+
+
+    
