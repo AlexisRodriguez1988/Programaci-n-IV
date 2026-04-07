@@ -1,0 +1,60 @@
+   Connection con;
+        Conexion conn = new Conexion();
+
+try {
+    con = conn.getConnection();
+    PreparedStatement ps = con.prepareStatement("UPDATE CUENTA SET saldo = saldo - ? WHERE idcuenta = 1");
+    
+    
+    ps.setFloat(1, Float.parseFloat(jtfMonto.getText()));
+
+    int res = ps.executeUpdate();
+
+    if (res > 0) {
+        JOptionPane.showMessageDialog(null, "Retiro exitoso");
+    } else {
+        JOptionPane.showMessageDialog(null, "Error al retirar");
+    }
+
+    
+    con.close();
+
+} catch (Exception e) {
+    System.err.print(e);
+
+}
+jtfMonto.setText("");
+    }                                           
+
+
+
+public SaldoJFrame() {
+        initComponents();
+        
+        Conexion conn = new Conexion();
+        Connection con = null;
+        
+        try {
+            con = conn.getConnection();
+           
+            PreparedStatement ps = con.prepareStatement("SELECT saldo FROM CUENTA WHERE idcuenta = 1");
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+               
+                String saldoActual = String.valueOf(rs.getDouble("saldo"));
+                jtfMonto.setText(saldoActual);
+            } else {
+                jtfMonto.setText("0.00");
+            }
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error de SQL: " + e.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        } finally {
+           
+            try { if (con != null) con.close(); } catch (SQLException ex) {}
+        }
+    
+}
